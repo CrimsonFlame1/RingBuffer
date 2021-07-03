@@ -11,14 +11,26 @@ class RingBuffer<T> implements Iterable<T>{
 	private class RingIterator implements Iterator<T> {
 		
 		private int readPosition = 0;
+		private int itemsRead = 0;
+		
+		public RingIterator() {
+			if(numberOfItems == array.length) {
+				readPosition = position;
+			}
+		}
 
 		@Override
 		public boolean hasNext() {
-			return readPosition < numberOfItems;
+			return itemsRead < numberOfItems;
 		}
 
 		@Override
 		public T next() {
+			++itemsRead;
+			
+			if(readPosition == array.length) {
+				readPosition = 0;
+			}
 			return array[readPosition++];
 		}
 		
@@ -67,8 +79,8 @@ public class App {
 		rb.add("ram");
 		rb.add("emilia");
 		
-		for(var it = rb.iterator(); it.hasNext(); ) {
-			System.out.println(it.next());
+		for(var n: rb) {
+			System.out.println(n);
 		}
 	}
 
